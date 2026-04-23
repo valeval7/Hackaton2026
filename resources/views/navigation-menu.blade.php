@@ -26,6 +26,11 @@
             {{ __('Mis Metas') }}
           </x-nav-link>
         </div>
+        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+          <x-nav-link href="{{ route('notifications.index') }}" :active="request()->routeIs('notifications.index')">
+            {{ __('Notificaciones') }}
+          </x-nav-link>
+        </div>
       </div>
 
       <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -152,6 +157,15 @@
       <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
         {{ __('Dashboard') }}
       </x-responsive-nav-link>
+      <x-responsive-nav-link href="{{ route('tasks.index') }}" :active="request()->routeIs('tasks.index')">
+        {{ __('Mis Tareas') }}
+      </x-responsive-nav-link>
+      <x-responsive-nav-link href="{{ route('goals.index') }}" :active="request()->routeIs('goals.index')">
+        {{ __('Mis Metas') }}
+      </x-responsive-nav-link>
+      <x-responsive-nav-link href="{{ route('notifications.index') }}" :active="request()->routeIs('notifications.index')">
+        {{ __('Notificaciones') }}
+      </x-responsive-nav-link>
     </div>
 
     <!-- Responsive Settings Options -->
@@ -199,7 +213,6 @@
           {{ __('Manage Team') }}
         </div>
 
-        <!-- Team Settings -->
         <x-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}" :active="request()->routeIs('teams.show')">
           {{ __('Team Settings') }}
         </x-responsive-nav-link>
@@ -210,7 +223,6 @@
         </x-responsive-nav-link>
         @endcan
 
-        <!-- Team Switcher -->
         @if (Auth::user()->allTeams()->count() > 1)
         <div class="border-t border-gray-200"></div>
 
