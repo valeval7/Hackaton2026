@@ -3,16 +3,22 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Poll;
 use App\Models\Notificacion;
 use App\Models\Tarea;
 use Illuminate\Support\Facades\Auth;
 
+#[Poll('30s')]
 class ListaNotificacion extends Component
 {
     public bool $soloNoLeidas = false;
 
-    #[\Livewire\Attributes\Poll('30s')]
-    public function generarRecordatorios(): void
+    public function mount(): void
+    {
+        $this->generarRecordatorios();
+    }
+
+    private function generarRecordatorios(): void
     {
         $tareasProximas = Tarea::where('user_id', Auth::id())
             ->whereDate('due_date', today()->addDay())
@@ -24,11 +30,11 @@ class ListaNotificacion extends Component
                 [
                     'user_id' => Auth::id(),
                     'titulo'  => "Vence mañana: {$tarea->title}",
-                    'leida'   => false,
                 ],
                 [
                     'tipo'      => 'vencimiento',
                     'contenido' => "La tarea '{$tarea->title}' vence mañana.",
+                    'leida'     => false,
                 ]
             );
         }
@@ -49,6 +55,8 @@ class ListaNotificacion extends Component
 
     public function render()
     {
+        $this->generarRecordatorios();
+
         $notificaciones = Notificacion::where('user_id', Auth::id())
             ->when($this->soloNoLeidas, fn($q) => $q->where('leida', false))
             ->latest()
