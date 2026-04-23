@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Notificacion;
+use App\Models\Tarea;
 use Illuminate\Support\Facades\Auth;
 
 class ListaNotificacion extends Component
@@ -13,21 +14,21 @@ class ListaNotificacion extends Component
     #[\Livewire\Attributes\Poll('30s')]
     public function generarRecordatorios(): void
     {
-        $tareasProximas = \App\Models\Tarea::where('user_id', Auth::id())
-            ->whereDate('fecha_vencimiento', today()->addDay())
-            ->where('estado', '!=', 'completada')
+        $tareasProximas = Tarea::where('user_id', Auth::id())
+            ->whereDate('due_date', today()->addDay())
+            ->where('status', '!=', 'completada')
             ->get();
 
         foreach ($tareasProximas as $tarea) {
             Notificacion::firstOrCreate(
                 [
-                    'user_id'  => Auth::id(),
-                    'titulo'   => "Vence mañana: {$tarea->titulo}",
-                    'leida'    => false
+                    'user_id' => Auth::id(),
+                    'titulo'  => "Vence mañana: {$tarea->title}",
+                    'leida'   => false,
                 ],
                 [
                     'tipo'      => 'vencimiento',
-                    'contenido' => "La tarea '{$tarea->titulo}' vence mañana."
+                    'contenido' => "La tarea '{$tarea->title}' vence mañana.",
                 ]
             );
         }
@@ -54,6 +55,6 @@ class ListaNotificacion extends Component
             ->paginate(15);
 
         return view('livewire.lista-notificacion', compact('notificaciones'))
-               ->layout('layouts.app');
+            ->layout('layouts.app');
     }
 }
