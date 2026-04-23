@@ -5,16 +5,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tarea extends Model
 {
+   protected $table = 'tareas';
+
     protected $fillable = [
-        'user_id', 'nombre', 'materia', 'fecha_limite',
-        'peso', 'dificultad', 'tipo', 'notas',
-        'completada', 'completada_en', 'score',
+        'user_id',
+        'title',
+        'subject',
+        'description',
+        'score',
+        'due_date',
+        'tipo',
+        'priority',
+        'status',
+        'estimated_minutes',
     ];
 
     protected $casts = [
-        'fecha_limite'  => 'date',
-        'completada'    => 'boolean',
-        'completada_en' => 'datetime',
+        'due_date' => 'date',
+        'score' => 'integer',
     ];
 
     // Relación: una tarea pertenece a un usuario

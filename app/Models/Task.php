@@ -5,30 +5,38 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+
 class Task extends Model
 {
-  protected $fillable = [
-    'user_id',
-    'title',
-    'subject',
-    'description',
-    'due_date',
-    'priority',
-    'status',
-    'estimated_minutes',
-  ];
+    protected $table = 'tareas';
 
-  protected $casts = ['due_date' => 'date'];
+    protected $fillable = [
+        'user_id',
+        'title',
+        'subject',
+        'description',
+        'score',
+        'due_date',
+        'tipo',
+        'priority',
+        'status',
+        'estimated_minutes',
+    ];
 
-  public function user(): BelongsTo
-  {
-    return $this->belongsTo(User::class);
-  }
+    protected $casts = [
+        'due_date' => 'date',
+        'score' => 'integer',
+    ];
 
-  public function isVencida(): bool
-  {
-    return $this->due_date
-      && $this->due_date->isPast()
-      && $this->status !== 'completada';
-  }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function isVencida(): bool
+    {
+        return $this->due_date
+            && $this->due_date->isPast()
+            && $this->status !== 'completada';
+    }
 }
