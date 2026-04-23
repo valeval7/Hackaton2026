@@ -33,9 +33,9 @@ class Tarea extends Model
 
     // Scope: solo las pendientes
     public function scopePendientes($query)
-    {
-        return $query->where('completada', false);
-    }
+{
+    return $query->where('status', '!=', 'completada');
+}
 
     // Scope: ordenadas por score descendente
     public function scopePorUrgencia($query)

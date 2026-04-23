@@ -60,7 +60,7 @@ class PriorizacionService
     public function recalcularTodas(int $userId): void
     {
         Tarea::where('user_id', $userId)
-            ->where('completada', false)
+->where('status', '!=', 'completada')
             ->each(function (Tarea $tarea) {
                 $tarea->update(['score' => $this->calcularScore($tarea)]);
             });
