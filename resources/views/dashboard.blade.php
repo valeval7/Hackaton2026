@@ -1,15 +1,11 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <x-welcome />
-            </div>
-        </div>
+<x-app-layout title="Dashboard">
+    <div class="mb-8 border-b border-stone-200 p-6 bg-[#d9e1f1]">
+        <h1 class="text-2xl font-semibold text-stone-800 tracking-tight">Resumen</h1>
+        <p class="text-sm text-stone-400 mt-1">
+            Tus tareas ordenadas por urgencia real.
+        </p>
     </div>
+
+    {{-- Componente Livewire del dashboard --}}
+    @livewire('dashboard')
 </x-app-layout>
