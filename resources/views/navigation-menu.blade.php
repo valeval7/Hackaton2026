@@ -5,8 +5,8 @@
 <!-- Logo -->
 <div class="shrink-0 flex items-center">
     <a href="{{ route('dashboard') }}">
-        <img src="https://github.com/valeval7/Hackaton2026/blob/main/logo_tareas2.png?raw=true"
-            class="block h-9 w-auto" alt="Logo">
+        <img src="https://github.com/valeval7/Hackaton2026/blob/main/logo2.svg?raw=true"
+            class="block h-14 w-auto" alt="Logo">
     </a>
 </div>
 
