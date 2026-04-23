@@ -18,28 +18,31 @@ class ListaNotificacion extends Component
         $this->generarRecordatorios();
     }
 
-    private function generarRecordatorios(): void
-    {
-        $tareasProximas = Tarea::where('user_id', Auth::id())
-            ->whereDate('due_date', today()->addDay())
-            ->where('status', '!=', 'completada')
-            ->get();
+   private function generarRecordatorios(): void
+{
+    $tareasProximas = Tarea::where('user_id', Auth::id())
+        ->whereDate('due_date', today()->addDay())
+        ->where('status', '!=', 'completada')
+        ->get();
 
-        foreach ($tareasProximas as $tarea) {
-            Notificacion::firstOrCreate(
-                [
-                    'user_id' => Auth::id(),
-                    'titulo'  => "Vence mañana: {$tarea->title}",
-                ],
-                [
-                    'tipo'      => 'vencimiento',
-                    'contenido' => "La tarea '{$tarea->title}' vence mañana.",
-                    'leida'     => false,
-                ]
-            );
+    foreach ($tareasProximas as $tarea) {
+        $notif = Notificacion::firstOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'titulo'  => "Vence mañana: {$tarea->title}",
+            ],
+            [
+                'tipo'      => 'vencimiento',
+                'contenido' => "La tarea '{$tarea->title}' vence mañana.",
+                'leida'     => false,
+            ]
+        );
+
+        if ($notif->wasRecentlyCreated) {
+            broadcast(new \App\Events\NuevaNotificacion($notif));
         }
     }
-
+}
     public function marcarLeida(int $id): void
     {
         Notificacion::where('user_id', Auth::id())
