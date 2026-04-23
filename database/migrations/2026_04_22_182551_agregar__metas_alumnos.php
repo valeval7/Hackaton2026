@@ -14,10 +14,6 @@ return new class extends Migration
        Schema::table('users', function (Blueprint $table) {
         $table->unsignedInteger('racha_dias')->default(0);
         $table->date('ultimo_acceso')->nullable();
-
-        // Metas anti-procrastinación
-        $table->unsignedInteger('meta_tareas_dia')->default(3);      // Cuántas tareas diarias se compromete a hacer
-        $table->unsignedInteger('tareas_completadas_hoy')->default(0); // Progreso del día
         $table->boolean('modo_examen')->default(false); 
        });
     }

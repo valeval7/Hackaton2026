@@ -13,6 +13,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Fortify;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -28,21 +31,32 @@ class FortifyServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {
-        Fortify::createUsersUsing(CreateNewUser::class);
-        Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
-        Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
-        Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
-        Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
+{
+    Fortify::createUsersUsing(CreateNewUser::class);
+    Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
+    Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
+    Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+    Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
 
-        RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+    Fortify::authenticateUsing(function (Request $request) {
+        $user = User::where('email', $request->email)->first();
 
-            return Limit::perMinute(5)->by($throttleKey);
-        });
+        if ($user && Hash::check($request->password, $user->password)) {
+            return $user;
+        }
 
-        RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
-        });
-    }
+        throw ValidationException::withMessages([
+            'email' => 'Las credenciales no son correctas.',
+        ]);
+    });
+
+    RateLimiter::for('login', function (Request $request) {
+        $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+        return Limit::perMinute(5)->by($throttleKey);
+    });
+
+    RateLimiter::for('two-factor', function (Request $request) {
+        return Limit::perMinute(5)->by($request->session()->get('login.id'));
+    });
+}
 }
