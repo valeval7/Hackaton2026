@@ -7,16 +7,26 @@ use Livewire\Attributes\Poll;
 use App\Models\Notificacion;
 use App\Models\Tarea;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 
+#[On('echo:notificaciones.{userId},nueva.notificacion')]
 #[Poll('30s')]
 class ListaNotificacion extends Component
 {
     public bool $soloNoLeidas = false;
 
-    public function mount(): void
-    {
-        $this->generarRecordatorios();
-    }
+public function nuevaNotificacion(): void
+{
+    $this->dispatch('$refresh');
+}
+
+public int $userId;
+
+public function mount(): void
+{
+    $this->userId = Auth::id();
+    $this->generarRecordatorios();
+}
 
    private function generarRecordatorios(): void
 {
