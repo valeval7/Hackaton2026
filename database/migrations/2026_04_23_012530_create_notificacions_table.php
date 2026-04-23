@@ -12,7 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('titulo');
-            $table->text('mensaje')->nullable();
+            $table->string('tipo')->default('general');
+            $table->text('contenido')->nullable();
             $table->boolean('leida')->default(false);
             $table->timestamps();
         });
