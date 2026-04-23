@@ -6,7 +6,7 @@
 <div class="shrink-0 flex items-center">
     <a href="{{ route('dashboard') }}">
         <img src="https://raw.githubusercontent.com/valeval7/Hackaton2026/352647689f6ea1a0478b526ceceda251b54f6569/logo2.svg"
-            class="block h-14 w-auto" alt="Logo">
+            class="block h-16 w-auto" alt="Logo">
     </a>
 </div>
 
